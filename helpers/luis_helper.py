@@ -9,7 +9,7 @@ from booking_details import BookingDetails
 
 
 class Intent(Enum):
-    BOOK_FLIGHT = "Book"
+    BOOK_FLIGHT = "book"
     CANCEL = "Cancel"
     GET_WEATHER = "GetWeather"
     NONE_INTENT = "NoneIntent"
@@ -78,19 +78,22 @@ class LuisHelper:
                 # the Time part. TIMEX is a format that represents DateTime expressions that include some ambiguity.
                 # e.g. missing a Year.
                 # ----
-                date_entities = recognizer_result.entities.get("str_date", [])
+
+                date_entities= recognizer_result.entities.get("$instance", {}).get("str_date", [])
+                print('*',date_entities)
                 if date_entities:
-                    timex = date_entities[0]["timex"]
-
+                    timex = date_entities[0]["text"]
+                    print('*',timex)
                     if timex:
-                        datetime = timex[0].split("T")[0]
-
+                        datetime = timex #[0].split("T")[0]
+                        print(datetime)
                         result.travel_date = datetime
 
                 else:
+                    print('* None')
                     result.travel_date = None
 
         except Exception as exception:
-            print('execute_luis_query',exception)
+            print('execute_luis_query exception',exception)
 
         return intent, result
