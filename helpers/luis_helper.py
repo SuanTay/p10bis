@@ -6,7 +6,7 @@ from botbuilder.ai.luis import LuisRecognizer
 from botbuilder.core import IntentScore, TopIntent, TurnContext
 
 from booking_details import BookingDetails
-
+import sys
 
 class Intent(Enum):
     BOOK_FLIGHT = "book"
@@ -74,6 +74,11 @@ class LuisHelper:
                     result.origin = from_entities[0]["text"].capitalize()
                     
                 # ----
+                 # budget
+                budget_entities = recognizer_result.entities.get("$instance", {}).get("budget", [])
+                if len(budget_entities) > 0:
+                    result.budget = budget_entities[0]["text"].capitalize()
+                    #----
                 # This value will be a TIMEX. And we are only interested in a Date so grab the first result and drop
                 # the Time part. TIMEX is a format that represents DateTime expressions that include some ambiguity.
                 # e.g. missing a Year.
@@ -95,5 +100,7 @@ class LuisHelper:
 
         except Exception as exception:
             print('execute_luis_query exception',exception)
-
+            e = sys.exc_info()[1]
+            print(sys.exc_info())
+            print('ERROR' , e.args[0])
         return intent, result

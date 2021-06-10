@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 """Flight booking dialog."""
 
-#from datatypes_date_time.timex import Timex
+from datatypes_date_time.timex import Timex
 
 from botbuilder.dialogs import WaterfallDialog, WaterfallStepContext, DialogTurnResult
 from botbuilder.dialogs.prompts import ConfirmPrompt, TextPrompt, PromptOptions
@@ -32,6 +32,8 @@ class BookingDialog(CancelAndHelpDialog):
                 self.destination_step,
                 self.origin_step,
                 self.travel_date_step,
+                self.adults_step,
+                self.budget_step,
                 self.confirm_step,
                 self.final_step,
             ],
@@ -39,7 +41,7 @@ class BookingDialog(CancelAndHelpDialog):
         waterfall_dialog.telemetry_client = telemetry_client
 
         self.add_dialog(text_prompt)
-        # self.add_dialog(ConfirmPrompt(ConfirmPrompt.__name__))
+        self.add_dialog(ConfirmPrompt(ConfirmPrompt.__name__))
         self.add_dialog(
             DateResolverDialog(DateResolverDialog.__name__, self.telemetry_client)
         )
@@ -59,7 +61,7 @@ class BookingDialog(CancelAndHelpDialog):
                 PromptOptions(
                     prompt=MessageFactory.text("To what city would you like to travel?")
                 ),
-            )  # pylint: disable=line-too-long,bad-continuation
+            )  
 
         return await step_context.next(booking_details.destination)
 
@@ -75,8 +77,7 @@ class BookingDialog(CancelAndHelpDialog):
                 PromptOptions(
                     prompt=MessageFactory.text("From what city will you be travelling?")
                 ),
-            )  # pylint: disable=line-too-long,bad-continuation
-
+            ) 
         return await step_context.next(booking_details.origin)
 
     async def travel_date_step(
@@ -99,6 +100,43 @@ class BookingDialog(CancelAndHelpDialog):
 
         return await step_context.next(booking_details.travel_date)
 
+    async def adults_step(
+        self, step_context: WaterfallStepContext
+    ) -> DialogTurnResult:
+        """Prompt for number of adults."""
+        booking_details = step_context.options
+
+        # Capture the results of the previous step
+        booking_details.travel_date = step_context.result
+        if booking_details.adults is None:
+            return await step_context.prompt(
+                TextPrompt.__name__,
+                PromptOptions(
+                    prompt=MessageFactory.text("how many adults?")
+                ),
+            )  
+
+        return await step_context.next(booking_details.adults)
+
+    async def budget_step(
+        self, step_context: WaterfallStepContext
+    ) -> DialogTurnResult:
+        """Prompt for number of adults."""
+        booking_details = step_context.options
+        # Capture the results of the previous step
+        booking_details.adults = step_context.result
+        if booking_details.budget is None:
+            return await step_context.prompt(
+                TextPrompt.__name__,
+                PromptOptions(
+                    prompt=MessageFactory.text("What is your budget?")
+                ),
+            )  
+
+
+        return await step_context.next(booking_details.budget)
+
+
     async def confirm_step(
         self, step_context: WaterfallStepContext
     ) -> DialogTurnResult:
@@ -106,10 +144,11 @@ class BookingDialog(CancelAndHelpDialog):
         booking_details = step_context.options
 
         # Capture the results of the previous step
-        booking_details.travel_date = step_context.result
+        booking_details.budget = step_context.result
         msg = (
             f"Please confirm, I have you traveling to: { booking_details.destination }"
-            f" from: { booking_details.origin } on: { booking_details.travel_date}."
+            f" from: { booking_details.origin } on: { booking_details.travel_date} "
+            f"for {booking_details.adults} and with a budget of {booking_details.budget}."
         )
 
         # Offer a YES/NO prompt.
@@ -127,7 +166,9 @@ class BookingDialog(CancelAndHelpDialog):
 
         return await step_context.end_dialog()
 
-    #def is_ambiguous(self, timex: str) -> bool:
-    #    """Ensure time is correct."""
-    #    timex_property = Timex(timex)
-    #    return "definite" not in timex_property.types
+    def is_ambiguous(self, timex: str) -> bool:
+        """Ensure time is correct."""
+        timex_property = Timex(timex)
+        return "definite" not in timex_property.types
+    
+   
