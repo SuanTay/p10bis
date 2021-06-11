@@ -25,6 +25,7 @@ jobs:
       run: |
         python -m venv env
         .\env\Scripts\activate
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Zip the application files
@@ -35,5 +36,5 @@ jobs:
       with:
         app-name: 'flymebotweb'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_f6bcedf89bb44ab38dcbd662daa18875 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_0a23370edc7d4a6f94fc90ff3f99a5b0 }}
         package: '.\app.zip'
