@@ -15,5 +15,5 @@ class DefaultConfig:
     LUIS_APP_ID  = os.environ.get("LuisAppId", "22dace73-c035-4def-a5c0-072306b41258")
     LUIS_API_KEY  = os.environ.get("LuisApiKey", "27c8037609e64e908a3cc829433e4437" ) # Authoring key
     LUIS_API_HOST_NAME = os.environ.get("LuisApiHost", "https://luisflyme02-authoring.cognitiveservices.azure.com/") # "westeurope.api.cognitive.microsoft.com"
-    APPINSIGHTS_INSTRUMENTATION_KEY = os.environ.get("AppInsights", "9e7124b9-929c-40a4-8dcf-59cb037148ef")
+    APPINSIGHTS_INSTRUMENTATION_KEY = os.environ.get("AppInsights", "27c57565-05cf-4019-9657-9b8b1142693d")
     
