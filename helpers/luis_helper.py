@@ -61,13 +61,6 @@ class LuisHelper:
                 if len(to_entities) > 0:
                     result.destination = to_entities[0]["text"].capitalize()
                 # ----
-                # nombre d'adults
-                adults_entities = recognizer_result.entities.get("$instance", {}).get("n_adult", [] )
-                if len(adults_entities) > 0:
-                    result.adults = adults_entities[0]["text"]
-                elif len(adults_entities)==0:
-                    result.adults = 1
-                # ----
                 # or city
                 from_entities = recognizer_result.entities.get("$instance", {}).get("or_city", [])
                 if len(from_entities) > 0:
@@ -83,20 +76,21 @@ class LuisHelper:
                 # the Time part. TIMEX is a format that represents DateTime expressions that include some ambiguity.
                 # e.g. missing a Year.
                 # ----
-
-                date_entities= recognizer_result.entities.get("$instance", {}).get("str_date", [])
-                print('*',date_entities)
+                date_entities = recognizer_result.entities.get("datetime", [])
+                print(date_entities)
                 if date_entities:
-                    timex = date_entities[0]["text"]
-                    print('*',timex)
-                    if timex:
-                        datetime = timex #[0].split("T")[0]
-                        print(datetime)
-                        result.travel_date = datetime
+                    timex_str = date_entities[0]["timex"]
+                    if timex_str:
+                        result.travel_str_date = timex_str[0].split("T")[0]
+
+                        if len(date_entities)==2:
+                            timex_end = date_entities[1]["timex"]
+                            result.travel_end_date = timex_end[0].split("T")[0]
 
                 else:
-                    print('* None')
-                    result.travel_date = None
+                    result.travel_str_date = None
+                    result.travel_end_date = None
+               
 
         except Exception as exception:
             print('execute_luis_query exception',exception)

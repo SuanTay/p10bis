@@ -7,8 +7,8 @@ class BookingDetails:
         self,
         destination: str = None,
         origin: str = None,
-        travel_date: str = None,
-        adults: str = None,
+        travel_str_date: str = None,
+        travel_end_date: str = None,
         budget: str = None,
         unsupported_airports=None,
     ):
@@ -16,7 +16,7 @@ class BookingDetails:
             unsupported_airports = []
         self.destination = destination
         self.origin = origin
-        self.travel_date = travel_date
-        self.adults = adults
+        self.travel_str_date = travel_str_date
+        self.travel_end_date = travel_end_date
         self.budget = budget
         self.unsupported_airports = unsupported_airports
