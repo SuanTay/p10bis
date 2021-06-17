@@ -1,6 +1,9 @@
 # Byte-compiled / optimized / DLL files
 dialogs/__pycache__/
 helpers/__pycache__/
+tests/__pycache__/
+bots/__pycache__/
+
 __pycache__/
 *.py[cod]
 *$py.class
@@ -9,6 +12,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.idea
 .Python
 build/
 develop-eggs/
