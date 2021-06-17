@@ -9,6 +9,7 @@ import os
 class DefaultConfig:
     """Configuration for the bot."""
     # app :  Fly_me_bot, flymebot
+    HOST = os.environ.get("host", 'localhost' )
     PORT  = os.environ.get("port", 3979 )
     APP_ID = os.environ.get("MicrosoftAppId", "7edb707a-eaf5-4a2b-ae9a-440bc2aa9f10") #'096751a9-801e-49c6-bd72-7d35d9d21973' # 
     APP_PASSWORD = os.environ.get("MicrosoftAppPassword", "wj6f?f%+kB.%(Qj71jUIE{yP>54w>oD") # '16e2ffe5-ce56-4da8-8190-bd8cab2386c2' # 
