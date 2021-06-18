@@ -67,6 +67,27 @@ class LuisHelper:
                     result.origin = from_entities[0]["text"].capitalize()
                     
                 # ----
+                # ----
+                # str_date
+                sd_si=0
+                sd_entities = recognizer_result.entities.get("$instance", {}).get("str_date", [])
+                if len(sd_entities) > 0:
+                    sd = sd_entities[0]["text"].capitalize()
+                    sd_si=sd_entities[0]["startIndex"]
+                    sd_ei=sd_entities[0]["endIndex"]
+                    print('sd',sd)
+                    
+                # ----
+                # end_date
+                ed_si=0
+                ed_entities = recognizer_result.entities.get("$instance", {}).get("end_date", [])
+                if len(ed_entities) > 0:
+                    ed = ed_entities[0]["text"].capitalize()
+                    ed_si=ed_entities[0]["startIndex"]
+                    ed_ei=sd_entities[0]["endIndex"]
+                    print('ed',ed)
+                    
+                # ----
                  # budget
                 budget_entities = recognizer_result.entities.get("$instance", {}).get("budget", [])
                 if len(budget_entities) > 0:
@@ -79,13 +100,19 @@ class LuisHelper:
                 date_entities = recognizer_result.entities.get("datetime", [])
                 print(date_entities)
                 if date_entities:
-                    timex_str = date_entities[0]["timex"]
-                    if timex_str:
-                        result.travel_str_date = timex_str[0].split("T")[0]
-
-                        if len(date_entities)==2:
-                            timex_end = date_entities[1]["timex"]
-                            result.travel_end_date = timex_end[0].split("T")[0]
+                    #choix du str_date ou du end_date
+                    print(len(date_entities))
+                    date = recognizer_result.entities.get("$instance", {}).get("datetime", [])
+                    print(date)
+                    for i in range(0,len(date_entities)):
+                        # get startIndex
+                        print('i',i, date[i]["startIndex"])
+                        if sd_si != 0:
+                            if date[i]["startIndex"]==sd_si:
+                                result.travel_str_date = date_entities[i]["timex"][0].split("T")[0]
+                        if ed_si != 0:
+                            if date[i]["startIndex"]==ed_si:
+                                result.travel_end_date = date_entities[i]["timex"][0].split("T")[0]
 
                 else:
                     result.travel_str_date = None

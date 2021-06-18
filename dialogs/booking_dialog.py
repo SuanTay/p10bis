@@ -134,8 +134,6 @@ class BookingDialog(CancelAndHelpDialog):
                     prompt=MessageFactory.text("What is your budget?")
                 ),
             )  
-
-
         return await step_context.next(booking_details.budget)
 
 
@@ -152,19 +150,18 @@ class BookingDialog(CancelAndHelpDialog):
             f" from: { booking_details.origin } on: { booking_details.travel_str_date} "
             f" to: {booking_details.travel_end_date} with a budget of {booking_details.budget}."
         )
-
         # Offer a YES/NO prompt.
         return await step_context.prompt(
             ConfirmPrompt.__name__, PromptOptions(prompt=MessageFactory.text(msg))
         )
 
-    async def final_step(self, step_context: WaterfallStepContext) -> DialogTurnResult:
+    async def final_step(self ,step_context: WaterfallStepContext) -> DialogTurnResult:
         """Complete the interaction and end the dialog."""
+        print('In final_step', step_context.result)
         if step_context.result:
-            booking_details = step_context.options
-            booking_details.travel_date = step_context.result
-
-            return await step_context.end_dialog(booking_details)
+            return await step_context.end_dialog()
+        else:
+            self.telemetry_client.track_event("dissatisfaction")
 
         return await step_context.end_dialog()
 
