@@ -162,6 +162,7 @@ class BookingDialog(CancelAndHelpDialog):
             return await step_context.end_dialog()
         else:
             self.telemetry_client.track_event("dissatisfaction")
+            self.telemetry_client.flush()
 
         return await step_context.end_dialog()
 
