@@ -169,7 +169,7 @@ class BookingDialog(CancelAndHelpDialog):
             properties['str_date'] = booking_details.travel_str_date
             properties['end_date'] = booking_details.travel_end_date
             self.telemetry_client.track_trace("bad answer", properties, 3)        
-            #self.telemetry_client.flush()
+            self.telemetry_client.flush()
 
         return await step_context.end_dialog()
 
